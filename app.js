@@ -1,6 +1,5 @@
 let doctors = [];
 
-// تحميل البيانات من CSV
 fetch('data.csv')
     .then(response => response.text())
     .then(text => {
@@ -13,7 +12,6 @@ fetch('data.csv')
         displayDoctors(doctors);
     });
 
-// عرض قائمة الأطباء على شكل بطاقات (الاسم فقط)
 function displayDoctors(list) {
     const container = document.getElementById('doctorsList');
     container.innerHTML = '';
@@ -22,14 +20,12 @@ function displayDoctors(list) {
         card.className = 'card';
         card.innerHTML = `<h3>${doc.name}</h3>`;
         card.addEventListener('click', () => {
-            // عند النقر، ننتقل لصفحة التفاصيل مع ID
             window.location.href = `details.html?id=${doc.id}`;
         });
         container.appendChild(card);
     });
 }
 
-// تعبئة الفلاتر
 function populateFilters() {
     const specialitySet = new Set(doctors.map(d => d.speciality));
     const citySet = new Set(doctors.map(d => d.city));
@@ -55,7 +51,6 @@ function populateFilters() {
     citySelect.addEventListener('change', filterDoctors);
 }
 
-// فلترة الأطباء
 function filterDoctors() {
     const name = document.getElementById('searchName').value.trim();
     const speciality = document.getElementById('filterSpeciality').value;

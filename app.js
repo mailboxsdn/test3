@@ -5,15 +5,15 @@ fetch('data.csv')
     .then(response => response.text())
     .then(text => {
         const rows = text.split('\n').slice(1);
-        doctors = rows.map(row => {
+        doctors = rows.map((row, index) => {
             const [name, speciality, city, workplace, schedule, phone, location] = row.split(',');
-            return { name, speciality, city, workplace, schedule, phone, location };
+            return { id: index, name, speciality, city, workplace, schedule, phone, location };
         });
         populateFilters();
         displayDoctors(doctors);
     });
 
-// عرض قائمة الأطباء على شكل بطاقات (اسم فقط)
+// عرض قائمة الأطباء على شكل بطاقات (الاسم فقط)
 function displayDoctors(list) {
     const container = document.getElementById('doctorsList');
     container.innerHTML = '';
@@ -21,29 +21,12 @@ function displayDoctors(list) {
         const card = document.createElement('div');
         card.className = 'card';
         card.innerHTML = `<h3>${doc.name}</h3>`;
-        card.addEventListener('click', () => showDetails(doc));
+        card.addEventListener('click', () => {
+            // عند النقر، ننتقل لصفحة التفاصيل مع ID
+            window.location.href = `details.html?id=${doc.id}`;
+        });
         container.appendChild(card);
     });
-}
-
-// شاشة التفاصيل عند النقر على الكارد
-function showDetails(doc) {
-    const container = document.getElementById('doctorsList');
-    container.innerHTML = `
-        <div class="card">
-            <h3>${doc.name}</h3>
-            <p>التخصص: ${doc.speciality}</p>
-            <p>المدينة: ${doc.city}</p>
-            <p>مكان العمل: ${doc.workplace}</p>
-            <p>مواعيد العمل: ${doc.schedule}</p>
-            <hr>
-            <p>
-                <a href="tel:${doc.phone}"><button>رقم الهاتف</button></a>
-                <a href="${doc.location}" target="_blank"><button>Google Maps</button></a>
-            </p>
-            <p><button onclick="displayDoctors(doctors)">العودة للقائمة</button></p>
-        </div>
-    `;
 }
 
 // تعبئة الفلاتر

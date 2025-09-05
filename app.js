@@ -1,9 +1,14 @@
-// app.js (محدَّث — فرز أبجدي عربي للأطباء والـ spinners)
 let doctors = [];
 
-// دالة مساعدة للفرز العربي الآمن (يتجاهل فراغات البداية والنهاية)
+// دالة لإزالة التشكيل من النصوص العربية
+function removeDiacritics(str) {
+    if (!str) return '';
+    return str.normalize('NFD').replace(/[\u064B-\u0652]/g, "");
+}
+
+// فرز أبجدي عربي
 function arabicCompare(a, b) {
-    return a.trim().localeCompare(b.trim(), 'ar');
+    return removeDiacritics(a.trim()).localeCompare(removeDiacritics(b.trim()), 'ar');
 }
 
 // تحميل البيانات من CSV
@@ -12,8 +17,8 @@ fetch('data.csv')
     .then(text => {
         const rows = text.split('\n').slice(1).filter(r => r.trim() !== '');
         doctors = rows.map((row, index) => {
-            // ملاحظة: هذا التحليل يفترض أن الحقول مفصولة بفاصلة ولا تحتوي الحقول على فاصلة داخلها.
-            const [name, speciality, city, workplace, schedule, phone, location] = row.split(',');
+            const cols = row.split(',');
+            const [name, speciality, city, workplace, schedule, phone, location] = cols;
             return {
                 id: index,
                 name: name ? name.trim() : '',
@@ -26,22 +31,18 @@ fetch('data.csv')
             };
         });
 
-        // فرز القائمة الأساسية للأطباء أبجدياً حسب الاسم (عربي)
         doctors.sort((a, b) => arabicCompare(a.name, b.name));
 
         populateFilters();
         displayDoctors(doctors);
     })
-    .catch(err => {
-        console.error('Failed to load data.csv:', err);
-    });
+    .catch(err => console.error('❌ فشل تحميل data.csv:', err));
 
-// عرض الأطباء (نرتب النتيجة قبل العرض لضمان الترتيب بعد الفلتر)
+// عرض الأطباء
 function displayDoctors(list) {
     const container = document.getElementById('doctorsList');
     container.innerHTML = '';
 
-    // تأكد من أن القائمة مرتبة أبجدياً قبل العرض
     const sorted = Array.from(list).sort((a, b) => arabicCompare(a.name, b.name));
 
     sorted.forEach(doc => {
@@ -55,10 +56,10 @@ function displayDoctors(list) {
     });
 }
 
-// تعبئة الفلاتر (spinners) بترتيب أبجدي
+// تعبئة الفلاتر
 function populateFilters() {
-    const specialitySet = new Set(doctors.map(d => d.speciality).filter(s => s));
-    const citySet = new Set(doctors.map(d => d.city).filter(c => c));
+    const specialitySet = new Set(doctors.map(d => d.speciality).filter(Boolean));
+    const citySet = new Set(doctors.map(d => d.city).filter(Boolean));
 
     const specialityArray = Array.from(specialitySet).sort((a, b) => arabicCompare(a, b));
     const cityArray = Array.from(citySet).sort((a, b) => arabicCompare(a, b));
@@ -66,21 +67,20 @@ function populateFilters() {
     const specialitySelect = document.getElementById('filterSpeciality');
     const citySelect = document.getElementById('filterCity');
 
-    // تنظيف الخيارات القديمة (ما عدا الخيار الافتراضي)
     specialitySelect.innerHTML = '<option value="">اختر التخصص</option>';
     citySelect.innerHTML = '<option value="">اختر المدينة</option>';
 
     specialityArray.forEach(s => {
         const option = document.createElement('option');
         option.value = s;
-        option.textContent = s;
+        option.textContent = escapeHtml(s);
         specialitySelect.appendChild(option);
     });
 
     cityArray.forEach(c => {
         const option = document.createElement('option');
         option.value = c;
-        option.textContent = c;
+        option.textContent = escapeHtml(c);
         citySelect.appendChild(option);
     });
 
@@ -89,14 +89,15 @@ function populateFilters() {
     citySelect.addEventListener('change', filterDoctors);
 }
 
-// فلترة الأطباء (وترتيب النتيجة أبجدياً قبل العرض)
+// فلترة الأطباء مع ignore case و ignore diacritics
 function filterDoctors() {
-    const name = document.getElementById('searchName').value.trim();
+    const nameInput = removeDiacritics(document.getElementById('searchName').value.trim().toLowerCase());
     const speciality = document.getElementById('filterSpeciality').value;
     const city = document.getElementById('filterCity').value;
 
     const filtered = doctors.filter(d => {
-        const matchName = !name || d.name.includes(name);
+        const docName = removeDiacritics(d.name.toLowerCase());
+        const matchName = !nameInput || docName.includes(nameInput);
         const matchSpec = !speciality || d.speciality === speciality;
         const matchCity = !city || d.city === city;
         return matchName && matchSpec && matchCity;
@@ -105,8 +106,9 @@ function filterDoctors() {
     displayDoctors(filtered);
 }
 
-// حماية بسيطة من XSS عند إدراج النصوص في innerHTML
+// حماية XSS
 function escapeHtml(unsafe) {
+    if (!unsafe) return '';
     return unsafe
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")

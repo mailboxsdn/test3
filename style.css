@@ -11,15 +11,16 @@ html, body {
 body {
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
 }
 
 /* Header أصغر */
 header {
     background: linear-gradient(90deg, #1e3a8a, #3b5abf);
     color: white;
-    padding: 5px;
+    padding: 10px;
     text-align: center;
-    font-size: 16px;
+    font-size: 20px;
     letter-spacing: 0.5px;
     flex-shrink: 0;
     box-shadow: 0 3px 5px rgba(0,0,0,0.2);
@@ -65,9 +66,9 @@ hr {
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 20px;
     padding: 20px;
-    overflow-y: auto;
     flex-grow: 1;
     justify-content: center;
+    align-content: start;
 }
 
 /* Card Style */
@@ -78,8 +79,10 @@ hr {
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     transition: transform 0.2s, box-shadow 0.2s;
     cursor: pointer;
-    min-height: 100px;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* المحتوى من الأعلى */
 }
 
 .card:hover {
@@ -118,8 +121,16 @@ footer {
     color: white;
     text-align: center;
     padding: 12px;
-    flex-shrink: 0;
     font-size: 16px;
+    flex-shrink: 0;
     position: sticky;
     bottom: 0;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .cards-container {
+        grid-template-columns: 1fr;
+        padding: 10px;
+    }
 }

@@ -4,8 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>الأطباء السودانيين</title>
-    <link rel="stylesheet" href="style.css">
+
+    <!-- PWA -->
     <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e3a8a">
+    <link rel="apple-touch-icon" href="icon-192.png">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
@@ -32,12 +38,23 @@
         للتواصل: <a href="mailto:mailboxsdn@gmail.com">mailboxsdn@gmail.com</a>
     </footer>
 
+    <!-- نافذة التثبيت -->
+    <div id="installModal" class="modal">
+        <div class="modal-content">
+            <span id="closeModal" class="close">&times;</span>
+            <h2>📲 تثبيت التطبيق</h2>
+            <p>يمكنك تثبيت التطبيق على جهازك للوصول السريع بدون متصفح.</p>
+            <button id="installBtn">تثبيت الآن</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
     <script src="app.js"></script>
     <script>
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('service-worker.js')
-        .then(() => console.log('Service Worker registered'))
-        .catch(err => console.log('Service Worker failed:', err));
+        .then(() => console.log('✅ Service Worker مسجل'))
+        .catch(err => console.log('❌ فشل التسجيل:', err));
     }
     </script>
 </body>

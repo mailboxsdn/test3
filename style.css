@@ -12,32 +12,30 @@ body {
     flex-direction: column;
 }
 
-/* Header */
+/* Header صغير الحجم */
 header {
     background: linear-gradient(90deg, #1e3a8a, #3b5abf);
     color: white;
-    padding: 20px;
+    padding: 12px;
     text-align: center;
-    font-size: 26px;
+    font-size: 20px; /* حجم أصغر */
     flex-shrink: 0;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    box-shadow: 0 3px 5px rgba(0,0,0,0.2);
 }
 
-/* Filters */
+/* Filters: كل فلتر في صف منفصل */
 .filters {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column; /* كل فلتر في صف */
     gap: 10px;
     padding: 15px;
-    justify-content: space-between;
     background-color: #dce6f5;
     flex-shrink: 0;
 }
 
 .filters input,
 .filters select {
-    flex: 1 1 30%;
-    min-width: 120px;
+    width: 100%; /* يمتد على عرض الشاشة */
     padding: 10px;
     border-radius: 8px;
     border: 1px solid #1e3a8a;

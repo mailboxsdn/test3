@@ -5,6 +5,7 @@ html, body {
     font-family: 'Arial', sans-serif;
     background-color: #f0f4fa;
     direction: rtl;
+    box-sizing: border-box;
 }
 
 body {
@@ -12,21 +13,22 @@ body {
     flex-direction: column;
 }
 
-/* Header صغير الحجم */
+/* Header أصغر */
 header {
     background: linear-gradient(90deg, #1e3a8a, #3b5abf);
     color: white;
-    padding: 12px;
+    padding: 10px;
     text-align: center;
-    font-size: 20px; /* حجم أصغر */
+    font-size: 20px;
+    letter-spacing: 0.5px;
     flex-shrink: 0;
     box-shadow: 0 3px 5px rgba(0,0,0,0.2);
 }
 
-/* Filters: كل فلتر في صف منفصل */
+/* Filters كل فلتر في صف منفصل */
 .filters {
     display: flex;
-    flex-direction: column; /* كل فلتر في صف */
+    flex-direction: column;
     gap: 10px;
     padding: 15px;
     background-color: #dce6f5;
@@ -35,7 +37,8 @@ header {
 
 .filters input,
 .filters select {
-    width: 100%; /* يمتد على عرض الشاشة */
+    width: 100%;
+    max-width: 500px;
     padding: 10px;
     border-radius: 8px;
     border: 1px solid #1e3a8a;
@@ -64,6 +67,7 @@ hr {
     padding: 20px;
     overflow-y: auto;
     flex-grow: 1;
+    justify-content: center;
 }
 
 /* Card Style */
@@ -74,6 +78,8 @@ hr {
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     transition: transform 0.2s, box-shadow 0.2s;
     cursor: pointer;
+    min-height: 100px;
+    text-align: center;
 }
 
 .card:hover {
@@ -114,4 +120,6 @@ footer {
     padding: 12px;
     flex-shrink: 0;
     font-size: 16px;
+    position: sticky;
+    bottom: 0;
 }
